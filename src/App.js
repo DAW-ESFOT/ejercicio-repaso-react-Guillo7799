@@ -1,24 +1,30 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from "react";
 import './App.css';
 
 function App() {
+  const [books, setBooks] = useState([]);
+
+  useEffect(()=>{
+    const fetchBooks =async()=>{
+      const response = await fetch(
+          "https://stark-spire-22280.herokuapp.com/api/books"
+      );
+      const json= await response.json();
+      console.log('json',json);
+      setBooks(json.data);
+      return json;
+    };
+    fetchBooks();
+  },[]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <>
+        <h1>Lista de libros</h1>
+        <ul>
+          {books.map((book) => (
+              <li key={book.id}>{book.title}</li>
+          ))}
+        </ul>
+      </>
   );
 }
 
